@@ -1,7 +1,9 @@
 using System;
 using System.Collections;
+using Unity.VectorGraphics;
 using UnityEditor.Experimental.GraphView;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public class Character : MonoBehaviour
 {
@@ -58,6 +60,8 @@ public class Character : MonoBehaviour
     public bool isOnPlatform = false;
     public bool platty = false;
 
+    [Header("Death")]
+    public Collider DeathPlane;
 
 
 
@@ -103,8 +107,20 @@ public class Character : MonoBehaviour
 
     }
 
+    private void OnCollisionEnter(Collision collision)
+    {
+      if(collision.collider == DeathPlane)
+        {
+            Debug.Log("Deathplane Hit");
+            SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
+
+        }
+    }
+
     private void Update()
     {
+
+
 
         if (Input.GetKeyUp(PlatCon) && currentPlatform != null)
         {
@@ -322,19 +338,7 @@ public class Character : MonoBehaviour
 
         if(currentPlatform != null)
         {
-            // Okay so right now this is, for some reason, not applying force to the rigidbody
-            // The rigidbody is not moving and the player just walks off. 
-            // Need to:
-            // 1. Make the platform move
-            // 2. Make the player's position stay synced to the platform's position
-            //
-            // 3. Make the player unparent the platform when they disconnect- this new (null) version does work
-            // It's just nor being called for some reason. If worse comes to worse, bind disconnecting from a platform to left click maybe?
-            // The parent thing CAN solve problem 2, but to even test it we need 1 solved
-            // 1 then 2 then 3
-
-
-
+            
             moveDirection = transform.TransformDirection(moveDirection);
 
 
